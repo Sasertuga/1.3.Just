@@ -3,7 +3,7 @@ const val HOUR = 3600
 const val DAY = 86400
 
 fun main() {
-    agoToText(56478)
+    agoToText(1500)
 }
 
 fun agoToText(timeToAgo: Int) {
