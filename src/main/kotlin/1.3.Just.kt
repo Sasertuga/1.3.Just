@@ -3,32 +3,34 @@ const val HOUR = 3600
 const val DAY = 86400
 
 fun main() {
-    agoToText(1500)
+    println("был(а) в сети ${agoToText(61212344)}")
 }
 
-fun agoToText(timeToAgo: Int) {
-    val toMinute = timeToAgo / MINUTE
-    val toHour = timeToAgo / HOUR
+fun agoToText(timeToAgo: Int): String {
+    return when {
+        timeToAgo <= MINUTE -> "только что"
+        timeToAgo in (MINUTE + 1) until HOUR -> "${timeToAgo / MINUTE} ${correctnessForMinute(timeToAgo)} назад"
+        timeToAgo in HOUR until DAY -> "${timeToAgo / HOUR} ${correctnessForHour(timeToAgo)} назад"
+        timeToAgo >= DAY && timeToAgo < DAY * 2 -> "сегодня"
+        timeToAgo >= DAY * 2 && timeToAgo < DAY * 3 -> "вчера"
+        timeToAgo > DAY * 3 -> "давно"
+        else -> ""
+    }
+}
 
-    val correctnessForMinute = when {
-        toMinute % 10 == 1 && toMinute != 11 -> "минуту"
-        toMinute == 12 || toMinute == 13 || toMinute == 14 -> "минут"
-        toMinute % 10 == 2 || toMinute % 10 == 3 || toMinute % 10 == 4 -> "минуты"
+fun correctnessForMinute(timeToAgo: Int): String {
+    return when (timeToAgo / MINUTE) {
+        1, 21, 31, 41, 51 -> "минуту"
+        2, 3, 4, 22, 23, 24, 32, 33, 34, 42, 43, 44, 52, 53, 54 -> "минуты"
         else -> "минут"
     }
+}
 
-    val correctnessForHour = when {
-        toHour % 10 == 1 -> "час"
-        toHour % 10 == 2 || toHour % 10 == 3 || toHour % 10 == 4 -> "часа"
+fun correctnessForHour(timeToAgo: Int): String {
+    return when (timeToAgo / HOUR) {
+        1, 21 -> "час"
+        2, 3, 4, 22, 23, 24 -> "часа"
         else -> "часов"
     }
-
-    when {
-        timeToAgo < MINUTE -> println("был(а) только что")
-        timeToAgo in MINUTE until HOUR -> println("был(а) $toMinute $correctnessForMinute назад")
-        timeToAgo in HOUR until DAY -> println("был(а) $toHour $correctnessForHour назад")
-        timeToAgo >= DAY && timeToAgo < DAY * 2 -> println("был(а) сегодня")
-        timeToAgo >= DAY * 2 && timeToAgo < DAY * 3 -> println("был(а) вчера")
-        timeToAgo >= DAY * 3 -> println("был(а) давно")
-    }
 }
+
